@@ -50,14 +50,10 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
 
     if (title.length === 0) {
       setHasTitleError(true);
-
-      return;
     }
 
     if (!userName) {
       sethasUserNameError(true);
-
-      return;
     }
 
     if (!notAllDataInput) {
