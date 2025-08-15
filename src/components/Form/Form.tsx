@@ -61,6 +61,7 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
         todoId: getNewPostId(todos),
         user: findUser(userName),
         title,
+        completed: false,
       });
 
       setCount(prev => prev + 1);
