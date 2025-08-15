@@ -24,6 +24,7 @@ function preperedData(users: User[], todos: Todo[]): UserWithTodos[] {
       user: users.find((user: User) => todo.userId === user.id)!,
       title: todo.title,
       todoId: todo.id,
+      completed: todo.completed,
     };
   });
 
