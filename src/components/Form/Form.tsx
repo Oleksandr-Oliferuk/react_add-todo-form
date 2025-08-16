@@ -11,23 +11,24 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
   const [count, setCount] = useState(0);
   const [title, setTitle] = useState('');
   const [hasTitleError, setHasTitleError] = useState(false);
-  const [userName, setUserName] = useState('');
+
+  const [userId, setUserId] = useState<number>(0);
   const [hasUserNameError, sethasUserNameError] = useState(false);
 
   const handleOnTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value.trim());
+    setTitle(event.target.value);
     setHasTitleError(false);
   };
 
   const handleOnUserIdChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
-    setUserName(event.target.value);
+    setUserId(Number(+event.target.value));
     sethasUserNameError(false);
   };
 
-  const findUser = (currentUser: string) => {
-    return users.find(user => user.name === currentUser)!;
+  const findUser = (id: number) => {
+    return users.find(user => user.id === id)!;
   };
 
   function getNewPostId(todosArr: Todo[]) {
@@ -40,34 +41,36 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
     return Math.random().toFixed(16).slice(2);
   }
 
-  const [idTitle] = useState(() => `${title}-${getRandomDigits()}`);
-  const [idUser] = useState(() => `${userName}-${getRandomDigits()}`);
+  const [idTitle] = useState(() => `title-${getRandomDigits()}`);
+  const [idUser] = useState(() => `user-${getRandomDigits()}`);
 
-  const notAllDataInput = !title.trim() || !userName.trim();
+  const notAllDataInput = !title.trim() || !userId;
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
-    if (title.length === 0) {
+    if (title.trim().length === 0) {
       setHasTitleError(true);
     }
 
-    if (!userName) {
+    if (!userId) {
       sethasUserNameError(true);
     }
 
     if (!notAllDataInput) {
+      const user = findUser(userId);
+
       onSubmit({
         id: getNewPostId(todos),
-        title,
-        userId: findUser(userName).id,
+        title: title.trim(),
+        userId: user.id,
         completed: false,
-        user: findUser(userName),
+        user,
       });
 
       setCount(prev => prev + 1);
       setTitle('');
-      setUserName('');
+      setUserId(0);
       setHasTitleError(false);
       sethasUserNameError(false);
     }
@@ -96,7 +99,7 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
         <select
           id={idUser}
           data-cy="userSelect"
-          value={userName}
+          value={userId}
           onChange={handleOnUserIdChange}
         >
           <option value="" disabled>
@@ -105,7 +108,7 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
 
           {users.map((user: User) => {
             return (
-              <option key={user.id} value={user.name}>
+              <option key={user.id} value={user.id}>
                 {user.name}
               </option>
             );

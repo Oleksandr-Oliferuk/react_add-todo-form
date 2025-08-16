@@ -3,7 +3,7 @@ import { TodoList } from './components/TodoList';
 
 import usersFromServer from './api/users';
 import todosFromServer from './api/todos';
-import { User, UserWithTodos } from './types';
+import { User } from './types';
 import { Todo } from './types';
 import { Form } from './components/Form/Form';
 import { useState } from 'react';
