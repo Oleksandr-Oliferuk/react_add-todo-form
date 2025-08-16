@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { User, UserWithTodos } from '../../types';
+import { Todo, User } from '../../types';
 
 type Props = {
   users: User[];
-  todos: UserWithTodos[];
-  onSubmit: (newTodos: UserWithTodos) => void;
+  todos: Todo[];
+  onSubmit: (newTodos: Todo) => void;
 };
 
 export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
@@ -15,7 +15,7 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
   const [hasUserNameError, sethasUserNameError] = useState(false);
 
   const handleOnTitle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setTitle(event.target.value);
+    setTitle(event.target.value.trim());
     setHasTitleError(false);
   };
 
@@ -30,8 +30,8 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
     return users.find(user => user.name === currentUser)!;
   };
 
-  function getNewPostId(posts: UserWithTodos[]) {
-    const maxId = Math.max(...posts.map(post => post.todoId));
+  function getNewPostId(todosArr: Todo[]) {
+    const maxId = Math.max(...todosArr.map(todo => todo.id));
 
     return maxId + 1;
   }
@@ -58,10 +58,11 @@ export const Form: React.FC<Props> = ({ users, onSubmit, todos }) => {
 
     if (!notAllDataInput) {
       onSubmit({
-        todoId: getNewPostId(todos),
-        user: findUser(userName),
+        id: getNewPostId(todos),
         title,
+        userId: findUser(userName).id,
         completed: false,
+        user: findUser(userName),
       });
 
       setCount(prev => prev + 1);

@@ -18,13 +18,14 @@ import { useState } from 'react';
 
 //   return unionData;
 // }
-function preperedData(users: User[], todos: Todo[]): UserWithTodos[] {
+function preperedData(users: User[], todos: Todo[]): Todo[] {
   const unionData = todos.map((todo: Todo) => {
     return {
-      user: users.find((user: User) => todo.userId === user.id)!,
+      id: todo.id,
       title: todo.title,
-      todoId: todo.id,
+      userId: todo.userId,
       completed: todo.completed,
+      user: users.find((user: User) => todo.userId === user.id)!,
     };
   });
 
@@ -34,8 +35,8 @@ function preperedData(users: User[], todos: Todo[]): UserWithTodos[] {
 export const App = () => {
   const visibleData = preperedData(usersFromServer, todosFromServer);
 
-  const [todos, setTodos] = useState<UserWithTodos[]>(visibleData);
-  const addTodos = (newTodos: UserWithTodos) => {
+  const [todos, setTodos] = useState<Todo[]>(visibleData);
+  const addTodos = (newTodos: Todo) => {
     setTodos(prevTodos => [...prevTodos, newTodos]);
   };
 
@@ -44,7 +45,7 @@ export const App = () => {
       <h1>Add todo form</h1>
 
       <Form users={usersFromServer} todos={todos} onSubmit={addTodos} />
-      <TodoList posts={todos} />
+      <TodoList todos={todos} />
     </div>
   );
 };
